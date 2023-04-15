@@ -20,3 +20,6 @@ pip list --outdated
 python3 -m pip install --upgrade {package_name}
 
 python3 ./db_init.py
+
+sql.toad.cz/?
+
