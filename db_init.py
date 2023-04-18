@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
 import sqlite3
 
-sqlite3.connect("gb_edu.db")
+db_connection = sqlite3.connect("teachers.db")
+cursor = db_connection.cursor()
+
+'''
+teachers
+courses
+streams
+grades
+'''
+
