@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Ограничение скрипта - названия таблиц должны совпадать с названиями ниже
 sqlite3 ./teachers.db <<EOF
 .tables
 .schema teachers_tb

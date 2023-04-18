@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+'''
+Database should be in same directory and named as "teachers.db"
+'''
 import sqlite3
 import re
 
