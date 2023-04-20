@@ -10,7 +10,7 @@ tb_teachers_query = '''CREATE TABLE teachers_tb (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         name TEXT NOT NULL,
                         surname TEXT NOT NULL,
-                        email TEXT NOT NULL);'''
+                        email TEXT NOT NULL UNIQUE);'''
 
 tb_courses_query = '''CREATE TABLE cources_tb (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
