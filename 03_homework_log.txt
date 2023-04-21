@@ -10,11 +10,16 @@
 Выполните задание на таблице с данными.
 
 """
+Переименование:
+ALTER TABLE streams_tb RENAME COLUMN starting_date TO started_at;
 
-ALTER TABLE table_name
-RENAME COLUMN current_name TO new_name
+Добавление:
+ALTER TABLE streams_tb ADD COLUMN finished_at TEXT;
 
-ALTER TABLE table_name
-ADD COLUMN column_definition
+Приведение:
+(решение через импорт данных из .csv файлов)
+
+Изменение типа столбца:
+
 
 (SQLITETUTORIAL.NET)
