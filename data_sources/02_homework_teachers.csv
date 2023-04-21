@@ -1,5 +1,4 @@
-Ключ преподавателя,Имя,Фамилия,Электронная почта
+id,name,surname,email
 1,Николай,Савельев,saveliev.n@mai.ru
 2,Наталья,Петрова,petrova.n@yandex.ru
 3,Елена,Малышева,malisheva.e@google.com
-4,Никита,Ващенко,vashenko.n@yandex.ru

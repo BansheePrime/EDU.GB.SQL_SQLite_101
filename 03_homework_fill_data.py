@@ -3,9 +3,10 @@
 Database should be in same directory and named as "teachers.db"
 '''
 import sqlite3
+import csv
+
 
 source_db = "teachers.db"
-source_table = "streams_tb"
 
 db_connection = sqlite3.connect(source_db)
 cursor = db_connection.cursor()
