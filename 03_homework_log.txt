@@ -1,0 +1,56 @@
+"""
+Задание
+Работаем с базой данных teachers.db. 
+В качестве отчёта сдайте команды, которые выполнялись (в текстовом файле), а также файл базы данных.
+1. В таблице streams переименуйте столбец даты начала обучения в started_at.
+2. В таблице streams добавьте столбец даты завершения обучения finished_at.
+3. Приведите базу данных в полное соответствие с данными в таблицах из методички
+
+### 4. Дополнительное задание (выполняется по желанию): в таблице успеваемости измените тип столбца «Ключ потока» на REAL. 
+Выполните задание на таблице с данными.
+
+"""
+Переименование:
+ALTER TABLE streams_tb RENAME COLUMN starting_date TO started_at;
+
+Добавление:
+ALTER TABLE streams_tb ADD COLUMN finished_at TEXT;
+
+Приведение:
+(решение с помощью Python и импорта данных из .csv файлов и выполнение циклических запросов см. ниже)
+add_teachers_data_query = (f"INSERT INTO teachers_tb VALUES ('{id}', '{name}', '{surname}', '{email}');")
+add_courses_data_query = (f"INSERT INTO cources_tb VALUES ('{id}', '{name}');")
+add_streams_data_query = (f"INSERT INTO streams_tb VALUES ('{id}', '{course_id}', '{stream_number}', '{started_at}', '{students_number}', {finished_at});")
+add_grades_data_query = (f"INSERT INTO grades_tb VALUES ('{teacher_id}', '{stream_id}', '{grade}');")
+
+Изменение типа столбца:
+Следуя документации (https://www.sqlite.org/lang_altertable.html):
+"SQLite supports a limited subset of ALTER TABLE. 
+The ALTER TABLE command in SQLite allows these alterations of an existing table: 
+it can be renamed; a column can be renamed; a column can be added to it; 
+or a column can be dropped from it. "
+
+"7. Making Other Kinds Of Table Schema Changes"
+Краткий алгоритм для изменений, подобных требуемым в задаче:
+"   1. Create new table
+    2. Copy data
+    3. Drop old table
+    4. Rename new into old "
+
+1. Create new table
+CREATE TABLE grades_alter_type_tb (
+    teacher_id INTEGER NOT NULL,
+    stream_id REAL NOT NULL,
+    grade REAL NOT NULL,
+    PRIMARY KEY(teacher_id, stream_id),
+    FOREIGN KEY (teacher_id) REFERENCES teachers_tb(id),
+    FOREIGN KEY (stream_id) REFERENCES streams_tb(id));
+
+2. Copy data
+INSERT INTO grades_alter_type_tb SELECT * FROM grades_tb;
+
+3. Drop old table
+DROP TABLE grades_tb;
+
+4. Rename new into old
+ALTER TABLE grades_alter_type_tb RENAME TO grades_tb;
