@@ -17,6 +17,7 @@ def show_columns():
 
 print("Колонки таблицы streams_tb до переименования: ")
 show_columns()
+print()
 
 column_rename_query = '''ALTER TABLE streams_tb
                         RENAME COLUMN starting_date TO started_at;'''
@@ -24,6 +25,7 @@ column_rename_query = '''ALTER TABLE streams_tb
 cursor.execute(column_rename_query)
 print("Колонки таблицы streams_tb после переименования: ")
 show_columns()
+print()
 
 column_add_query = '''ALTER TABLE streams_tb
                         ADD COLUMN finished_at TEXT;'''
@@ -31,6 +33,7 @@ column_add_query = '''ALTER TABLE streams_tb
 cursor.execute(column_add_query)
 print("Колонки таблицы streams_tb после добавления: ")
 show_columns()
+print()
 
 db_connection.commit()
 db_connection.close()
