@@ -19,6 +19,7 @@ ALTER TABLE streams_tb ADD COLUMN finished_at TEXT;
 Приведение:
 (решение через импорт данных из .csv файлов)
 
+
 Изменение типа столбца:
 
 
