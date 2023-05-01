@@ -1,0 +1,86 @@
+"""
+Урок 4. Выборка данных, агрегация данных
+Задание
+Работаем с базой данных учителей teachers.db. Для каждого задания надо создать запрос, 
+сдать нужно только код запросов в текстовом файле.
+
+1. Преобразовать дату начала потока в таблице потоков к виду год-месяц-день. Используйте команду UPDATE.
+2. Получите идентификатор и номер потока, запланированного на самую позднюю дату.
+3. Покажите уникальные значения года по датам начала потоков обучения.
+4. Найдите количество преподавателей в базе данных. Выведите искомое значение в столбец с именем total_teachers.
+5. Покажите даты начала двух последних по времени потоков.
+6. Найдите среднюю успеваемости учеников по потокам преподавателя с идентификатором равным 1.
+7. Дополнительное задание (выполняется по желанию): найдите идентификаторы преподавателей, 
+у которых средняя успеваемость по всем потокам меньше 4.8.
+
+"""
+1
+sqlite> .header on  # для удобства
+sqlite> SELECT * FROM streams_tb LIMIT 1;  # посмотреть текущее состояние в первой строке
+        id|course_id|stream_number|started_at|students_number|finished_at
+        1|3|165|18.08.2020|34|0
+sqlite> UPDATE streams_tb SET started_at = SUBSTR(started_at, 7, 4) || '-' || SUBSTR(started_at, 4, 2) || '-' || SUBSTR(started_at, 1, 2);
+/*****/ обновляем столбец начала потока, присваивая ему результат функции SUBSTR и заполняем промежутки знаком "-"
+/*****/ функция SUBSTR извлекает подстроку, начиная с определенной позиции и определенной длины
+sqlite> SELECT * FROM streams_tb LIMIT 1;
+        1|3|165|2020-08-18|34|0
+
+2
+sqlite> .mode column # для большего удобства
+sqlite> .schema streams_tb
+        CREATE TABLE streams_tb (
+                                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                course_id INTEGER NOT NULL,
+                                stream_number INTEGER NOT NULL UNIQUE,
+                                {...}
+                                )
+sqlite> SELECT id, stream_number FROM streams_tb ORDER by started_at DESC LIMIT 1;
+        id  stream_number
+        --  -------------
+        4   210
+/*****/ 
+
+3
+sqlite> SELECT DISTINCT(SUBSTR(started_at, 1, 4)) FROM streams_tb;
+        (SUBSTR(started_at, 1, 4))
+        --------------------------
+        2020
+/*****/ выбрали SUBSTR из столбца начала потоков годы, нашли уникальное, используя DISTINCT
+
+4
+sqlite> SELECT COUNT(id) AS 'total_teachers' FROM teachers_tb;
+        total_teachers
+        --------------
+        3
+/*****/ 
+
+5
+sqlite> SELECT started_at FROM streams_tb ORDER BY started_at DESC LIMIT 2;
+        started_at
+        ----------
+        2020-12-03
+        2020-11-12
+/*****/ 
+
+6
+sqlite> .tables
+        cources_tb   grades_tb    streams_tb   teachers_tb
+sqlite> .schema grades_tb 
+        CREATE TABLE IF NOT EXISTS "grades_tb" (
+                                teacher_id INTEGER NOT NULL,
+                                stream_id REAL NOT NULL,
+                                grade REAL NOT NULL,
+                                {...}
+                                );
+sqlite> SELECT AVG(grade) FROM grades_tb WHERE teacher_id = 1;
+        AVG(grade)
+        ----------
+        4.85
+/*****/ 
+
+7
+sqlite> SELECT teacher_id, AVG(grade) AS Average FROM grades_tb GROUP BY teacher_id HAVING AVG(grade) < 4.8;
+        teacher_id  Average
+        ----------  -------
+        3           4.7 
+/*****/ 
