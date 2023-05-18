@@ -58,6 +58,10 @@ sqlite> SELECT
 В отчёт выведите идентификатор потока, фамилию и имя преподавателя.
 4
 sqlite> 
+SELECT
+(SELECT stream_number FROM streams_tb WHERE course_id = 
+(SELECT id FROM teachers_tb WHERE name = 'Наталья' and surname = 'Петрова')
+) AS teachers_stream;
 
 /*****/ 
 
