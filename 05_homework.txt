@@ -26,34 +26,32 @@ sqlite> SELECT stream_number,
 2
 sqlite> SELECT stream_number, 
         (SELECT name FROM courses_tb WHERE id = course_id) as course_name,
-        'teacher_names',
-        'grades'
+        (SELECT surname FROM teachers_tb WHERE id = course_id) as teacher_name,
+        (SELECT grade FROM grades_tb WHERE teacher_id = course_id) as grade
         FROM streams_tb
-        ORDER BY grades ASC;
+        ORDER BY grade ASC
+        LIMIT 2;
+
+        stream_number  course_name             teacher_name  grade
+        -------------  ----------------------  ------------  -----
+        165            Linux. Рабочая станция  Малышева      4.7  
+        203            Базы данных             Савельев      4.8  
+
 
 /*****/ 
 
 3. Найдите среднюю успеваемость всех потоков преподавателя Николая Савельева. 
 В отчёт выведите идентификатор преподавателя и среднюю оценку по потокам.
 3
-sqlite> 
-select teacher_id, AVG(grade) AS avg FROM grades_tb group by teacher_id;
-select id from teachers_tb where name = 'Николай' AND surname = 'Савельев';
+sqlite> SELECT
+        (SELECT id FROM teachers_tb WHERE name = 'Николай' and surname = 'Савельев') AS id,
+        (SELECT AVG(grade) AS needed_avg FROM grades_tb WHERE teacher_id = 
+                (SELECT id FROM teachers_tb WHERE name = 'Николай' and surname = 'Савельев')
+        ) AS avg_grade;
 
-select teacher_id, AVG(grade) AS avg FROM grades_tb where id = lsv_id (select id from teachers_tb where name = 'Николай' AND surname = 'Савельев') as lsv_id group by teacher_id;
-select id from teachers_tb where name = 'Николай' AND surname = 'Савельев';
-
-select 'teacher_surname', 'teacher_name', 'course_name', grade from grades_tb;
-sqlite> .width 15 12 11 6
-
-select
-(select name from teachers_tb where id = teacher_id) as teacher_name,
-(select surname from teachers_tb where id = teacher_id) as teacher_surname,
-(select name from courses_tb where id =
-(select course_id from streams_tb where id = course_id)) as course_name,
-grade from grades_tb;
-
-
+        id  avg_grade
+        --  ---------
+        1   4.85
 /*****/ 
 
 4. Найдите потоки преподавателя Натальи Петровой, а также потоки, по которым успеваемость ниже 4.8. 
