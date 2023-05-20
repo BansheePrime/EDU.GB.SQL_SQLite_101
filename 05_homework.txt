@@ -1,0 +1,114 @@
+"""
+Задание 5
+Работаем с базой данных учителей teachers.db. 
+Для каждого задания создайте запрос, сдать нужно только код запросов в текстовом файле. 
+Для решения воспользуйтесь вложенными запросами и UNION.
+"""
+1 
+sqlite> SELECT stream_number, 
+        (SELECT name FROM courses_tb WHERE id = course_id) as course_name, 
+        students_number 
+        FROM streams_tb 
+        WHERE students_number >= 40;
+
+        stream_number  course_name  students_number
+        -------------  -----------  ---------------
+        210            Базы данных  41  
+
+/*****/ 
+
+2. Найдите два потока с самыми низкими значениями успеваемости. 
+В отчет выведите номер потока, название курса, фамилию и имя преподавателя (одним столбцом), оценку успеваемости.
+2
+sqlite> SELECT 
+        (SELECT stream_number FROM streams_tb WHERE id = stream_id) AS stream_number,
+        (SELECT name FROM courses_tb WHERE id = 
+                (SELECT course_id FROM streams_tb WHERE id = stream_id)) AS course_name,
+        (SELECT surname || " " || name FROM teachers_tb WHERE id = teacher_id) AS teacher_name,
+        grade
+        FROM grades_tb
+        ORDER BY grade
+        LIMIT 2;
+
+        stream_number  course_name             teacher_name      grade
+        -------------  ----------------------  ----------------  -----
+        165            Linux. Рабочая станция  Малышева Елена    4.7  
+        203            Базы данных             Савельев Николай  4.8  
+
+/*****/ 
+
+3. Найдите среднюю успеваемость всех потоков преподавателя Николая Савельева. 
+В отчёт выведите идентификатор преподавателя и среднюю оценку по потокам.
+3
+sqlite> SELECT teacher_id,
+        AVG(grade)
+        FROM grades_tb
+        WHERE teacher_id = 
+                (SELECT id FROM teachers_tb WHERE name = 'Николай' and surname = 'Савельев');
+
+        teacher_id  AVG(grade)
+        ----------  ----------
+        1           4.85    
+        
+/*****/ 
+
+4. Найдите потоки преподавателя Натальи Петровой, а также потоки, по которым успеваемость ниже 4.8. 
+В отчёт выведите идентификатор потока, фамилию и имя преподавателя.
+4
+sqlite> SELECT stream_id,
+        (SELECT surname FROM teachers_tb WHERE id = teacher_id) AS surname,
+        (SELECT name FROM teachers_tb WHERE id = teacher_id) AS name
+        FROM grades_tb
+        WHERE teacher_id = 
+                (SELECT id FROM teachers_tb WHERE name = 'Наталья' and surname = 'Петрова')
+        UNION
+        SELECT stream_id,
+        (SELECT surname FROM teachers_tb WHERE id = teacher_id),
+        (SELECT name FROM teachers_tb WHERE id = teacher_id)
+        FROM grades_tb
+        WHERE grade < 4.8;
+
+        stream_id  surname          name   
+        ---------  ---------------  -------
+        1.0        Малышева         Елена  
+        2.0        Петрова          Наталья
+
+        Более элегантный способ (решение преподавателя):
+        SELECT stream_id,
+        (SELECT surname FROM teachers_tb WHERE id = teacher_id) AS surname,
+        (SELECT name FROM teachers_tb WHERE id = teacher_id) AS name
+        FROM grades_tb
+        WHERE grade < 4.8 
+        OR
+                teacher_id = 
+                (SELECT id FROM teachers_tb WHERE name = 'Наталья' and surname = 'Петрова');
+
+/*****/ 
+
+5. Дополнительное задание. 
+Найдите разницу между средней успеваемостью преподавателя с наивысшим соответствующим значением и 
+средней успеваемостью преподавателя с наименьшим значением. 
+Средняя успеваемость считается по всем потокам преподавателя.
+5
+sqlite> SELECT
+        MAX(avg_grade) - MIN(avg_grade) AS data
+        FROM
+        (SELECT AVG(grade) AS avg_grade FROM grades_tb GROUP BY teacher_id);
+
+        data
+        ----
+        0.2 
+
+/*****/ 
+
+Задание 2:
+1. (SELECT surname || " " || name FROM teachers_tb WHERE id = course_id) - в условии сравниваются идентифкаторы преподавателя и курса.
+2. (SELECT grade FROM grades_tb WHERE teacher_id = course_id) - аналогичная ошибка.
+
+Задание 3:
+Первый вложенный запрос не нужен, идентификатор преподавателя есть в таблице успеваемости основного запроса.
+
+Задание 4:
+Структуры частей UNION определены неверно, используйте подход основного запроса, в который помещаются подзапросы. Запрос не должен состоять из одних подзапросов.
+Ставлю пока хорошо, рекомендую проанализировать разбор ДЗ и досдать задание на отлично.
+
