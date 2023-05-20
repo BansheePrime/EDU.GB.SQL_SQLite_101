@@ -85,7 +85,14 @@ e. название курса, соответствующий потоку с �
 4
 sqlite> SELECT
         (SELECT name || " " || surname FROM teachers_tb) AS fio,
-        MIN
+        MIN AS min_grade,
+        'min_course_name' AS min_course,
+        MAX AS max_grade,
+        'max_course_name' AS max_course
+        FROM teachers_tb
+        JOIN grades_tb
+                ON
+        GROUP BY ;
 
 
 Найдите разницу между средней успеваемостью преподавателя с наивысшим соответствующим значением и 
