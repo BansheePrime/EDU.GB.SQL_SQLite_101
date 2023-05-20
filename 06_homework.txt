@@ -94,6 +94,17 @@ sqlite> SELECT
                 ON
         GROUP BY ;
 
+        SELECT
+        name || " " || surname AS fio,
+        'min_stream_grade' AS min_s_grade,
+        'min_course_name' AS min_c_name,
+        'max_stream_grade' AS max_s_grade,
+        'max_course_name' AS max_c_name
+        FROM teachers_tb
+        LEFT JOIN streams_tb
+        ON 
+        (SELECT AVG(grade) AS avg_grade FROM grades_tb GROUP BY teacher_id);
+
 
 Найдите разницу между средней успеваемостью преподавателя с наивысшим соответствующим значением и 
 средней успеваемостью преподавателя с наименьшим значением. 
