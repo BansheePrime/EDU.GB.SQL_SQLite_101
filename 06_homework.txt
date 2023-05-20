@@ -84,7 +84,22 @@ f. дату начала следующего потока.
 
 4
 sqlite> SELECT
+        (SELECT surname || " " || name FROM teachers_tb) AS fio,
+        MIN
 
+
+Найдите разницу между средней успеваемостью преподавателя с наивысшим соответствующим значением и 
+средней успеваемостью преподавателя с наименьшим значением. 
+Средняя успеваемость считается по всем потокам преподавателя.
+5
+sqlite> SELECT
+        MAX(avg_grade) - MIN(avg_grade) AS data
+        FROM
+        (SELECT AVG(grade) AS avg_grade FROM grades_tb GROUP BY teacher_id);
+
+        data
+        ----
+        0.2 
 /*****/ 
 Преподаватель ждет ваше задание до 22 мая, 20:00 +03:00 UTC
 /*****/ 
