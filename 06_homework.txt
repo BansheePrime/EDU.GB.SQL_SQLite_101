@@ -12,7 +12,7 @@ sqlite> SELECT stream_number,
         started_at
         FROM streams_tb;
 
-        Вариант с JOIN:
+Вариант с JOIN:
 sqlite> SELECT 
         name, 
         stream_number, 
@@ -35,11 +35,18 @@ sqlite> SELECT
 В отчёт выведите название курса и количество учеников по всем потокам курса.
 2
 sqlite> SELECT
-        name,
-        students_number
+        name AS course_name,
+        SUM(students_number) AS students_total
         FROM courses_tb
         JOIN streams_tb
-            ON courses_tb.id = streams_tb.course_id;
+            ON courses_tb.id = streams_tb.course_id
+        GROUP BY course_id;
+        
+        course_name             students_total
+        ----------------------  --------------
+        Базы данных             76            
+        Основы Python           37            
+        Linux. Рабочая станция  34
 
 /*****/ 
 
