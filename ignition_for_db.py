@@ -12,7 +12,7 @@ tb_teachers_query = '''CREATE TABLE teachers_tb (
                         surname TEXT NOT NULL,
                         email TEXT NOT NULL);'''
 
-tb_courses_query = '''CREATE TABLE cources_tb (
+tb_courses_query = '''CREATE TABLE courses_tb (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         name TEXT NOT NULL UNIQUE);'''
 
@@ -20,7 +20,8 @@ tb_streams_query = '''CREATE TABLE streams_tb (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         course_id INTEGER NOT NULL,
                         stream_number INTEGER NOT NULL UNIQUE,
-                        starting_date TEXT NOT NULL,
+                        started_at TEXT NOT NULL,
+                        finished_at TEXT NOT NULL,
                         students_number INTEGER NOT NULL,
                         FOREIGN KEY (course_id) REFERENCES courses_tb(id));'''
 
