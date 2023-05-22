@@ -4,12 +4,20 @@ Database should be in same directory and named as "teachers.db"
 '''
 import sqlite3
 import csv
+from pathlib import Path
 
 source_db = "teachers.db"
 db_connection = sqlite3.connect(source_db)
 cursor = db_connection.cursor()
 
-with open("02_homework_teachers.csv", "r") as teachers_data:
+data_directory = Path('./data_sources')
+teachers_file = data_directory / 'teachers.csv'
+courses_file = data_directory / 'courses.csv'
+streams_file = data_directory / 'streams.csv'
+grades_file = data_directory / 'grades.csv'
+
+
+with open(teachers_file, "r") as teachers_data:
     teachers_csv = csv.reader(teachers_data, delimiter=",")
     next(teachers_csv, None)
     id = ""
@@ -27,7 +35,7 @@ with open("02_homework_teachers.csv", "r") as teachers_data:
         add_teachers_data_query = (f"INSERT INTO teachers_tb VALUES ('{id}', '{name}', '{surname}', '{email}');")
         cursor.execute(add_teachers_data_query)
 
-with open("02_homework_courses.csv", "r") as courses_data:
+with open(courses_file, "r") as courses_data:
     courses_csv = csv.reader(courses_data, delimiter=",")
     next(courses_csv, None)
     id = ""
@@ -41,7 +49,7 @@ with open("02_homework_courses.csv", "r") as courses_data:
         add_courses_data_query = (f"INSERT INTO courses_tb VALUES ('{id}', '{name}');")
         cursor.execute(add_courses_data_query)
 
-with open("02_homework_streams.csv", "r") as streams_data:
+with open(streams_file, "r") as streams_data:
     streams_csv = csv.reader(streams_data, delimiter=",")
     next(streams_csv, None)
     id = ""
@@ -63,7 +71,7 @@ with open("02_homework_streams.csv", "r") as streams_data:
         add_streams_data_query = (f"INSERT INTO streams_tb VALUES ('{id}', '{course_id}', '{stream_number}', '{started_at}', {finished_at}, '{students_number}');")
         cursor.execute(add_streams_data_query)
 
-with open("02_homework_grades.csv", "r") as grades_data:
+with open(grades_file, "r") as grades_data:
     grades_csv = csv.reader(grades_data, delimiter=",")
     next(grades_csv, None)
     teacher_id = ""
