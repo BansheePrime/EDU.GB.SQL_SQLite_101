@@ -1,3 +1,5 @@
 sqlite3/
 kandinsky-codd_quote.png
 *.db
+VIRTUAL_ENV_HERE.md
+tmp/
