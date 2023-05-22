@@ -10,7 +10,7 @@
 sqlite> CREATE VIEW latest_streams AS
         SELECT
         courses_tb.name AS course_name,
-        MAX(stream_number) AS latest_stream,
+        MAX(streams_tb.stream_number) AS latest_stream,
         MAX(streams_tb.started_at) AS latest_stream_start_date,
         AVG(grades_tb.grade) AS avg_course_grades
         FROM
