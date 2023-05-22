@@ -9,23 +9,17 @@
 1
 sqlite> CREATE VIEW latest_streams AS
         SELECT
-        name AS course_name,
-        (SELECT stream_number 
-            FROM streams_tb 
-            WHERE streams_tb.course_id = courses_tb.id 
-            ORDER BY started_at) 
-            AS latest_stream,
-        (SELECT started_at
-            FROM streams_tb
-            WHERE streams_tb.course_id = courses_tb.id 
-            ORDER BY started_at)
-            AS latest_start_date,
-        (SELECT AVG(grade)
-            FROM grades_tb
-            WHERE)
-        AS avg_grades
+        courses_tb.name AS course_name,
+        MAX(stream_number) AS latest_stream,
+        MAX(streams_tb.started_at) AS latest_stream_start_date,
+        AVG(grades_tb.grade) AS avg_course_grades
         FROM
-        courses_tb;
+        courses_tb
+        LEFT JOIN streams_tb
+            ON courses_tb.id = streams_tb.course_id
+        LEFT JOIN grades_tb
+            ON grades_tb.stream_id = streams_tb.id
+        GROUP BY courses_tb.id;
 
 
 /*****/ 
