@@ -1,0 +1,69 @@
+'''
+Задание
+Работаем с базой данных учителей teachers.db. 
+Для каждого задания надо сдать только код, который выполняется для получения результата, в текстовом файле.
+'''
+
+1. Создайте представление, которое для каждого курса выводит название, номер последнего потока, 
+дату начала обучения последнего потока и среднюю успеваемость курса по всем потокам.
+1
+sqlite> CREATE VIEW latest_streams AS
+        SELECT
+        courses_tb.name AS course_name,
+        MAX(streams_tb.stream_number) AS latest_stream,
+        MAX(streams_tb.started_at) AS latest_stream_start_date,
+        AVG(grades_tb.grade) AS avg_course_grades
+        FROM
+        courses_tb
+        LEFT JOIN streams_tb
+            ON courses_tb.id = streams_tb.course_id
+        LEFT JOIN grades_tb
+            ON grades_tb.stream_id = streams_tb.id
+        GROUP BY courses_tb.id;
+
+
+/*****/ 
+
+2. Удалите из базы данных всю информацию, которая относится к преподавателю с идентификатором, равным 3. 
+Используйте транзакцию.
+2
+sqlite> BEGIN TRANSATION;
+        DELETE FROM grades_tb
+        WHERE teacher_id = 3;
+        DELETE FROM teachers_tb
+        WHERE teacher_id = 3;
+        UPDATE;
+
+# В решении преподавателя используется ROLLBACK для отката при демострации.
+/*****/ 
+
+3. Создайте триггер для таблицы успеваемости, 
+который проверяет значение успеваемости на соответствие диапазону чисел от 0 до 5 включительно.
+3
+sqlite> CREATE TRIGGER check_grades_value 
+        BEFORE INSERT
+        ON grade
+        BEGIN
+            SELECT CASE
+            WHEN NEW.grade NOT BETWEEN 0 and 5
+        THEN
+            RAISE(ABORT, 'Please, change grade value. It should be between 0 and 5')
+            END;
+        END;
+
+
+# Преподаватель проверят, что такого триггера нет:
+DROP TRIGGER check_grades_value;
+/*****/ 
+
+4. Дополнительное задание. 
+Создайте триггер для таблицы потоков, который проверяет, 
+что дата начала потока больше текущей даты, 
+а номер потока имеет наибольшее значение среди существующих номеров. 
+При невыполнении условий необходимо вызвать ошибку с информативным сообщением.
+4
+sqlite> SELECT
+
+/*****/ 
+Преподаватель ждет ваше задание до 25 мая, 20:36 +03:00 UTC
+/*****/ 
