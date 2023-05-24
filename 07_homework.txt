@@ -27,15 +27,33 @@ sqlite> CREATE VIEW latest_streams AS
 2. Удалите из базы данных всю информацию, которая относится к преподавателю с идентификатором, равным 3. 
 Используйте транзакцию.
 2
-sqlite> SELECT
+sqlite> BEGIN TRANSATION;
+        DELETE FROM grades_tb
+        WHERE teacher_id = 3;
+        DELETE FROM teachers_tb
+        WHERE teacher_id = 3;
+        UPDATE;
 
+# В решении преподавателя используется ROLLBACK для отката при демострации.
 /*****/ 
 
 3. Создайте триггер для таблицы успеваемости, 
 который проверяет значение успеваемости на соответствие диапазону чисел от 0 до 5 включительно.
 3
-sqlite> SELECT
+sqlite> CREATE TRIGGER check_grades_value 
+        BEFORE INSERT
+        ON grade
+        BEGIN
+            SELECT CASE
+            WHEN NEW.grade NOT BETWEEN 0 and 5
+        THEN
+            RAISE(ABORT, 'Please, change grade value. It should be between 0 and 5')
+            END;
+        END;
 
+
+# Преподаватель проверят, что такого триггера нет:
+DROP TRIGGER check_grades_value;
 /*****/ 
 
 4. Дополнительное задание. 
