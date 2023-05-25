@@ -79,9 +79,17 @@ sqlite> SELECT
 4. Установите SQLiteStudio, подключите базу данных учителей, выполните в графическом клиенте любой запрос.
 
 4
-При инсталляции возникает проблема:
+При инсталляции на Linux возникает проблема:
+qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
+This application failed to start because no Qt platform plugin could be initialized. 
+Reinstalling the application may fix this problem.
 
-sqlite> SELECT
+Available platform plugins are: xcb.
+
+Решение:
+sudo apt-get install libxcb-xinerama0
+
+
 
 /*****/ 
 
