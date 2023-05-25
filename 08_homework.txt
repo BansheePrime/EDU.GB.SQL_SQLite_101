@@ -1,0 +1,106 @@
+'''
+Задание
+Работаем с базой данных учителей teachers.db. Для каждого задания требуется сдать только код, 
+который выполняется для получения результата, в текстовом файле. 
+В качестве отчёта к четвёртому заданию надо приложить скриншот.
+'''
+
+1. Найдите общее количество учеников для каждого курса. В отчёт выведите название курса и количество учеников по всем потокам курса. 
+Решите задание с применением оконных функций.
+1
+EDU.GB.SQL_SQLite_101/tmp$ sqlite3 ./teachers.db -header -column
+sqlite> .width 22 14
+sqlite> SELECT DISTINCT
+        name AS course_name,
+        SUM(students_number) OVER(PARTITION BY courses_tb.id) AS students_total
+        FROM courses_tb
+          LEFT JOIN streams_tb
+              ON courses_tb.id = streams_tb.course_id
+        ORDER BY courses_tb.name;
+
+        course_name             students_total
+        ----------------------  --------------
+        Linux. Рабочая станция  34
+        Базы данных             76
+        Основы Python           37
+
+/*****/ 
+
+2. Найдите среднюю оценку по всем потокам для всех учителей. В отчёт выведите идентификатор, 
+фамилию и имя учителя, среднюю оценку по всем проведённым потокам. 
+Учителя, у которых не было потоков, также должны попасть в выборку. 
+Решите задание с применением оконных функций.
+2
+sqlite> .width 2 8 7
+sqlite> 
+SELECT DISTINCT
+teachers_tb.id,
+teachers_tb.surname,
+teachers_tb.name,
+AVG(grade) OVER(PARTITION BY teachers_tb.id) AS avg_stream_grade
+FROM teachers_tb
+	LEFT JOIN grades_tb
+	ON teachers_tb.id = grades_tb.teacher_id;
+
+id  surname   name     avg_stream_grade
+--  --------  -------  ----------------
+1   Савельев  Николай  4.85
+2   Петрова   Наталья  4.9
+3   Малышева  Елена    4.7
+4   Ващенко   Никита
+
+
+/*****/ 
+
+3. Какие индексы надо создать для максимально быстрого выполнения представленного запроса?
+SELECT
+  surname,
+  name,
+  number,
+  performance
+FROM academic_performance
+  JOIN teachers 
+    ON academic_performance.teacher_id = teachers.id
+  JOIN streams
+    ON academic_performance.stream_id = streams.id
+WHERE number >= 200;    
+
+3
+Нужно создать индексы:
+- индекс teacher_id_idx таблицы academic_performance;
+- индекс id_idx таблицы streams;
+- индекс performance_idx таблицы academic_performance.
+
+/*****/ 
+
+4. Установите SQLiteStudio, подключите базу данных учителей, выполните в графическом клиенте любой запрос.
+
+4
+При инсталляции на Linux возникает проблема:
+qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
+This application failed to start because no Qt platform plugin could be initialized. 
+Reinstalling the application may fix this problem.
+
+Available platform plugins are: xcb.
+
+Решение:
+sudo apt-get install libxcb-xinerama0
+
+Скриншот:
+task4_screen.png
+
+
+/*****/ 
+
+5. Дополнительное задание. Для каждого преподавателя выведите имя, фамилию, 
+минимальное значение успеваемости по всем потокам преподавателя, 
+название курса, который соответствует потоку с минимальным значением успеваемости, 
+максимальное значение успеваемости по всем потокам преподавателя, название курса, 
+соответствующий потоку с максимальным значением успеваемости, дату начала следующего потока. 
+Выполните задачу с использованием оконных функций.
+5
+sqlite> SELECT
+
+/*****/ 
+Загрузите задание на проверку до 29 мая, 20:00 +03:00 UTC
+/*****/ 
