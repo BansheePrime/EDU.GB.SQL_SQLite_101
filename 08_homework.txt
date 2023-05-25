@@ -8,7 +8,21 @@
 1. Найдите общее количество учеников для каждого курса. В отчёт выведите название курса и количество учеников по всем потокам курса. 
 Решите задание с применением оконных функций.
 1
-sqlite> SELECT
+EDU.GB.SQL_SQLite_101/tmp$ sqlite3 ./teachers.db -header -column
+sqlite> .width 22 14 14
+sqlite> SELECT DISTINCT
+        name AS course_name,
+        SUM(students_number) OVER(PARTITION BY courses_tb.name) AS students_total
+        FROM courses_tb
+          LEFT JOIN streams_tb
+              ON courses_tb.id = streams_tb.course_id
+        ORDER BY courses_tb.name;
+
+        course_name             students_total
+        ----------------------  --------------
+        Linux. Рабочая станция  34
+        Базы данных             76
+        Основы Python           37
 
 /*****/ 
 
@@ -17,7 +31,29 @@ sqlite> SELECT
 Учителя, у которых не было потоков, также должны попасть в выборку. 
 Решите задание с применением оконных функций.
 2
-sqlite> SELECT
+sqlite> 
+SELECT
+id,
+surname,
+name,
+AVG(grade) AS avg_stream_grade
+FROM teachers_tb
+	LEFT JOIN grades_tb
+		ON teachers_tb.id = grades_tb.teacher_id
+GROUP BY teacher_id;
+
+sqlite> .width 2 8 7
+sqlite> 
+SELECT
+teachers_tb.id,
+teachers_tb.surname,
+teachers_tb.name,
+AVG(grade) AS avg_stream_grade
+FROM teachers_tb
+	LEFT JOIN grades_tb
+	ON teachers_tb.id = grades_tb.teacher_id
+GROUP BY teacher_id;
+
 
 /*****/ 
 
@@ -43,6 +79,8 @@ sqlite> SELECT
 4. Установите SQLiteStudio, подключите базу данных учителей, выполните в графическом клиенте любой запрос.
 
 4
+При инсталляции возникает проблема:
+
 sqlite> SELECT
 
 /*****/ 
@@ -53,7 +91,7 @@ sqlite> SELECT
 максимальное значение успеваемости по всем потокам преподавателя, название курса, 
 соответствующий потоку с максимальным значением успеваемости, дату начала следующего потока. 
 Выполните задачу с использованием оконных функций.
-4
+5
 sqlite> SELECT
 
 /*****/ 
