@@ -9,10 +9,10 @@
 Решите задание с применением оконных функций.
 1
 EDU.GB.SQL_SQLite_101/tmp$ sqlite3 ./teachers.db -header -column
-sqlite> .width 22 14 14
+sqlite> .width 22 14
 sqlite> SELECT DISTINCT
         name AS course_name,
-        SUM(students_number) OVER(PARTITION BY courses_tb.name) AS students_total
+        SUM(students_number) OVER(PARTITION BY courses_tb.id) AS students_total
         FROM courses_tb
           LEFT JOIN streams_tb
               ON courses_tb.id = streams_tb.course_id
@@ -31,28 +31,23 @@ sqlite> SELECT DISTINCT
 Учителя, у которых не было потоков, также должны попасть в выборку. 
 Решите задание с применением оконных функций.
 2
-sqlite> 
-SELECT
-id,
-surname,
-name,
-AVG(grade) AS avg_stream_grade
-FROM teachers_tb
-	LEFT JOIN grades_tb
-		ON teachers_tb.id = grades_tb.teacher_id
-GROUP BY teacher_id;
-
 sqlite> .width 2 8 7
 sqlite> 
-SELECT
+SELECT DISTINCT
 teachers_tb.id,
 teachers_tb.surname,
 teachers_tb.name,
-AVG(grade) AS avg_stream_grade
+AVG(grade) OVER(PARTITION BY teachers_tb.id) AS avg_stream_grade
 FROM teachers_tb
 	LEFT JOIN grades_tb
-	ON teachers_tb.id = grades_tb.teacher_id
-GROUP BY teacher_id;
+	ON teachers_tb.id = grades_tb.teacher_id;
+
+id  surname   name     avg_stream_grade
+--  --------  -------  ----------------
+1   Савельев  Николай  4.85
+2   Петрова   Наталья  4.9
+3   Малышева  Елена    4.7
+4   Ващенко   Никита
 
 
 /*****/ 
