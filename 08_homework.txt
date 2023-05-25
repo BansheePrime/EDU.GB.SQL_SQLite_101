@@ -65,9 +65,11 @@ FROM academic_performance
     ON academic_performance.stream_id = streams.id
 WHERE number >= 200;    
 
-
 3
-sqlite> SELECT
+Нужно создать индексы:
+- индекс teacher_id_idx таблицы academic_performance;
+- индекс id_idx таблицы streams;
+- индекс performance_idx таблицы academic_performance.
 
 /*****/ 
 
@@ -84,6 +86,8 @@ Available platform plugins are: xcb.
 Решение:
 sudo apt-get install libxcb-xinerama0
 
+Скриншот:
+task4_screen.png
 
 
 /*****/ 
